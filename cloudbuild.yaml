@@ -1,0 +1,14 @@
+steps:
+  # build the container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/react-native-calculator/teste-gcloud:${SHORT_SHA}', '.']
+  # push the container image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/react-native-calculator/teste-gcloud']
+  # deploy container image to Cloud Run
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['beta', 'run', 'deploy', 'teste-gcloud', '--image', 'gcr.io/react-native-calculator/teste-gcloud:${SHORT_SHA}', '--region', 'us-central1', '--allow-unauthenticated']
+  env:
+  - 'PORT=8080'
+images:
+- gcr.io/react-native-calculator/teste-gcloud
